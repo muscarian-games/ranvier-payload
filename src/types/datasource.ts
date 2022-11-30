@@ -1,16 +1,17 @@
 type DataSourceType = ArrayDataSource | ObjectDataSource;
 export type PayloadDataSourceConfig = {
   collection: string;
+  idProperty?: string;
 };
 
 export type DocWithId<T> = T & { id: string; }
 
 export interface ArrayDataSource<T = unknown> extends BaseDataSource<T> {
-  fetchAll(config: PayloadDataSourceConfig): T[];
+  fetchAll(config: PayloadDataSourceConfig): Promise<T[]>;
 }
 
 export interface ObjectDataSource<T = unknown> extends BaseDataSource<T> {
-  fetchAll(config: PayloadDataSourceConfig): Record<string, T>;
+  fetchAll(config: PayloadDataSourceConfig): Promise<Record<string, T>>;
 }
 
 export interface DataSourceConstructor {

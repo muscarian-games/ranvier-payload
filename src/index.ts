@@ -19,7 +19,31 @@ export class PayloadObjectDatasource<T> implements ObjectDataSource<T> {
     return import('payload') as unknown as Payload;
   }
 
-  async fetchAll(config) {
+  async hasData(config: PayloadDataSourceConfig) {
+    const payload = await this.getPayload();
+    const { collection } = config;
+    const results = await payload.find<DocWithId<T>>({
+      collection,
+      limit: 1, // Return one doc at most since we only need to have one to have data!
+    });
+
+    return Boolean(results.docs.length);
+  }
+
+  async fetch(config: PayloadDataSourceConfig, id) {
+    const payload = await this.getPayload();
+    const { collection } = config;
+    const results = await payload.findByID<DocWithId<T>>({
+      collection,
+      id, //TODO: may need to use "where" query instead + entityref? needs to be unique though.
+    });
+
+    if (!results) {
+      console.log('')
+    }
+  }
+
+  async fetchAll(config: PayloadDataSourceConfig) {
     const payload = await this.getPayload();
     const { collection } = config;
     const results = await payload.find<DocWithId<T>>({
@@ -29,6 +53,7 @@ export class PayloadObjectDatasource<T> implements ObjectDataSource<T> {
 
     // TODO: Set the id property in config (could be uuid for some collections, entityReference, etc.):
     const fetched: Record<string, T> = {};
+    const { idProperty = 'id' } = config;
     for (const doc of results.docs) {
       fetched[doc.id] = doc;
     }
