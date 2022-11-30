@@ -19,11 +19,9 @@ export interface DataSourceConstructor {
 }
 
 interface BaseDataSource<T = unknown> {
-  constructor(config: PayloadDataSourceConfig, rootPath: string);
-
-  fetch(): Promise<T>;
+  fetch(config: PayloadDataSourceConfig, id: string): Promise<T>;
   hasData(config: PayloadDataSourceConfig): Promise<boolean>;
-  update(config: PayloadDataSourceConfig, data: T): Promise<undefined>;
+  update?(config: PayloadDataSourceConfig, data: T): Promise<undefined>;
 
   // Unimplemented in Payload datasources:
   // replace(config: PayloadDataSourceConfig, data: T): Promise<undefined>;

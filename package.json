@@ -35,6 +35,9 @@
     "url": "https://github.com/muscarian-games/ranvier-payload/issues"
   },
   "homepage": "https://github.com/muscarian-games/ranvier-payload#readme",
+  "dependencies": {
+    "payload": "^1.2.1"
+  },
   "devDependencies": {
     "@types/node": "^18.11.9",
     "prettier": "^2.8.0",
@@ -42,8 +45,5 @@
     "tslint": "^6.1.3",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^4.9.3"
-  },
-  "peerDependencies": {
-    "payload": "^1.2.1"
   }
 }

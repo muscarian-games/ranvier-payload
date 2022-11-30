@@ -30,17 +30,19 @@ export class PayloadObjectDatasource<T> implements ObjectDataSource<T> {
     return Boolean(results.docs.length);
   }
 
-  async fetch(config: PayloadDataSourceConfig, id) {
+  async fetch(config: PayloadDataSourceConfig, id: string) {
     const payload = await this.getPayload();
     const { collection } = config;
-    const results = await payload.findByID<DocWithId<T>>({
+    const result = await payload.findByID<DocWithId<T>>({
       collection,
       id, //TODO: may need to use "where" query instead + entityref? needs to be unique though.
     });
 
-    if (!results) {
+    if (!result) {
       console.log('')
     }
+
+    return result;
   }
 
   async fetchAll(config: PayloadDataSourceConfig) {
