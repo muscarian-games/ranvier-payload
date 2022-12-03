@@ -32,18 +32,25 @@ export class PayloadObjectDatasource<T> implements ObjectDataSource<T> {
 
   async fetch(config: PayloadDataSourceConfig, id: string) {
     const payload = await this.getPayload();
-    const { collection } = config;
-    console.log('[payload][fetch] Searching for ', id, collection);
-    const result = await payload.findByID<DocWithId<T>>({
+    const { collection, idProperty = 'id' } = config;
+    // equivalent to SELECT * FROM collection WHERE idProperty = id
+    const query = {
+      [idProperty]: {
+        equals: id,
+      }
+    };
+    console.log('[payload][fetch] Searching for ', idProperty, id, collection);
+    const result = await payload.find<DocWithId<T>>({
       collection,
-      id, //TODO: may need to use "where" query instead + entityref? needs to be unique though.
+      where: query
     });
 
-    if (!result) {
-      console.log('')
+    if (!result.docs.length) {
+      console.log('none found');
+      return null;
     }
 
-    return result;
+    return result.docs[0];
   }
 
   async fetchAll(config: PayloadDataSourceConfig) {
