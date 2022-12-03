@@ -1,4 +1,5 @@
 import { Payload } from "payload";
+import { Options } from "payload/dist/collections/operations/local/create";
 import { DocWithId, ObjectDataSource, PayloadDataSourceConfig } from "./types/datasource";
 
 /**
@@ -6,7 +7,7 @@ import { DocWithId, ObjectDataSource, PayloadDataSourceConfig } from "./types/da
  * should return an Object, with each key representing
  * their respective entity by id.
  */
-export class PayloadObjectDatasource<T> implements ObjectDataSource<T> {
+export class PayloadObjectDatasource<T extends Record<string, unknown>> implements ObjectDataSource<T> {
   config: PayloadDataSourceConfig;
   rootPath: string;
 
@@ -86,5 +87,16 @@ export class PayloadObjectDatasource<T> implements ObjectDataSource<T> {
     }
 
     return fetched;
+  }
+
+  async update(config: PayloadDataSourceConfig, data: Options<T>['data']) {
+    const payload = await this.getPayload();
+    const { collection } = config;
+    const post = await payload.create({
+      collection, // required
+      data,
+    });
+    // tslint:disable-next-line:no-console
+    console.log('[payload][update] Posted ', post);
   }
 }
