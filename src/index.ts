@@ -2,8 +2,8 @@ import { Payload } from "payload";
 import { DocWithId, ObjectDataSource, PayloadDataSourceConfig } from "./types/datasource";
 
 /**
- * fetchAll() for accounts, players, and help 
- * should return an Object, with each key representing 
+ * fetchAll() for accounts, players, and help
+ * should return an Object, with each key representing
  * their respective entity by id.
  */
 export class PayloadObjectDatasource<T> implements ObjectDataSource<T> {
@@ -15,10 +15,16 @@ export class PayloadObjectDatasource<T> implements ObjectDataSource<T> {
     this.rootPath = rootPath;
   }
 
+  /**
+   * Get Payload for local API usage after initialization.
+   */
   async getPayload() {
     return import('payload') as unknown as Payload;
   }
 
+  /**
+   * Ensure that the collection exists and has at least one doc.
+   */
   async hasData(config: PayloadDataSourceConfig) {
     const payload = await this.getPayload();
     const { collection } = config;
@@ -30,10 +36,16 @@ export class PayloadObjectDatasource<T> implements ObjectDataSource<T> {
     return Boolean(results.docs.length);
   }
 
+  /**
+   * Fetch from collection where `id == idProperty`
+   * `idProperty` should be a property on the document that is unique
+   * and defaults to `'id'`
+   */
   async fetch(config: PayloadDataSourceConfig, id: string) {
     const payload = await this.getPayload();
     const { collection, idProperty = 'id' } = config;
-    // equivalent to SELECT * FROM collection WHERE idProperty = id
+
+    // equivalent to `SELECT * FROM collection WHERE idProperty = id` in SQL
     const query = {
       [idProperty]: {
         equals: id,
@@ -51,6 +63,9 @@ export class PayloadObjectDatasource<T> implements ObjectDataSource<T> {
       throw new Error(`Nothing found in collection '${collection }'with ID ${idProperty}: ${id}`);
     }
 
+    // tslint:disable-next-line:no-console
+    console.log('[payload][fetch] Found ', idProperty, id, collection, result.docs.length);
+
     return result.docs[0] as T;
   }
 
@@ -62,11 +77,12 @@ export class PayloadObjectDatasource<T> implements ObjectDataSource<T> {
       pagination: false, // Return all docs
     });
 
-    // TODO: Set the id property in config (could be uuid for some collections, entityReference, etc.):
     const fetched: Record<string, T> = {};
     const { idProperty = 'id' } = config;
     for (const doc of results.docs) {
-      fetched[doc.id] = doc;
+      // Forgive me for I have sinned
+      const id = doc[idProperty as 'id'];
+      fetched[id] = doc;
     }
 
     return fetched;
