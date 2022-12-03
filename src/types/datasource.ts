@@ -17,7 +17,7 @@ export interface ObjectDataSource<T extends Record<string, unknown> = Record<str
 interface BaseDataSource<T extends Record<string, unknown> = Record<string, unknown>> {
   fetch(config: PayloadDataSourceConfig, id: string): Promise<T>;
   hasData(config: PayloadDataSourceConfig): Promise<boolean>;
-  update?(config: PayloadDataSourceConfig, data: T): Promise<void>;
+  update?(config: PayloadDataSourceConfig, id: string, data: T): Promise<void>;
 
   // Unimplemented in Payload datasources:
   // replace(config: PayloadDataSourceConfig, data: T): Promise<undefined>;

@@ -89,13 +89,19 @@ export class PayloadObjectDatasource<T extends Record<string, unknown>> implemen
     return fetched;
   }
 
-  async update(config: PayloadDataSourceConfig, data: Options<T>['data']) {
+  async update(config: PayloadDataSourceConfig, id: string, data: Options<T>['data']) {
     const payload = await this.getPayload();
-    const { collection } = config;
+    const { collection, idProperty = 'id' } = config;
+    const updated = {
+      ...data,
+      [idProperty]: id,
+    };
+
     const post = await payload.create({
       collection, // required
-      data,
+      data: updated,
     });
+
     // tslint:disable-next-line:no-console
     console.log('[payload][update] Posted ', post);
   }
