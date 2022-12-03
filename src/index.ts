@@ -33,6 +33,7 @@ export class PayloadObjectDatasource<T> implements ObjectDataSource<T> {
   async fetch(config: PayloadDataSourceConfig, id: string) {
     const payload = await this.getPayload();
     const { collection } = config;
+    console.log('[payload][fetch] Searching for ', id, collection);
     const result = await payload.findByID<DocWithId<T>>({
       collection,
       id, //TODO: may need to use "where" query instead + entityref? needs to be unique though.
