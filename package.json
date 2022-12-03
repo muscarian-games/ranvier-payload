@@ -36,6 +36,7 @@
   },
   "homepage": "https://github.com/muscarian-games/ranvier-payload#readme",
   "dependencies": {
+    "husky": "^8.0.2",
     "payload": "^1.2.1"
   },
   "devDependencies": {

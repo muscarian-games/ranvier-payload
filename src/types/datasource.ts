@@ -14,10 +14,6 @@ export interface ObjectDataSource<T = unknown> extends BaseDataSource<T> {
   fetchAll(config: PayloadDataSourceConfig): Promise<Record<string, T>>;
 }
 
-export interface DataSourceConstructor {
-  new (config: PayloadDataSourceConfig, rootPath: string): DataSourceType
-}
-
 interface BaseDataSource<T = unknown> {
   fetch(config: PayloadDataSourceConfig, id: string): Promise<T>;
   hasData(config: PayloadDataSourceConfig): Promise<boolean>;

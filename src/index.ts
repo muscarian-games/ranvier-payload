@@ -39,6 +39,8 @@ export class PayloadObjectDatasource<T> implements ObjectDataSource<T> {
         equals: id,
       }
     };
+
+    // tslint:disable-next-line:no-console
     console.log('[payload][fetch] Searching for ', idProperty, id, collection);
     const result = await payload.find<DocWithId<T>>({
       collection,
@@ -46,11 +48,10 @@ export class PayloadObjectDatasource<T> implements ObjectDataSource<T> {
     });
 
     if (!result.docs.length) {
-      console.log('none found');
-      return null;
+      throw new Error(`Nothing found in collection '${collection }'with ID ${idProperty}: ${id}`);
     }
 
-    return result.docs[0];
+    return result.docs[0] as T;
   }
 
   async fetchAll(config: PayloadDataSourceConfig) {
