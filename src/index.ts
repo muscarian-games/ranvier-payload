@@ -94,7 +94,10 @@ export class PayloadObjectDatasource<T extends Record<string, unknown>> implemen
     const { collection, idProperty = 'id' } = config;
     const updated = {
       ...data,
+      // Set 'id' field to same as id property rather than using a mongo id.
+      // For this to work I think you also need to specify an id field of type 'text'.
       [idProperty]: id,
+      id,
     };
 
     const post = await payload.create({
