@@ -100,12 +100,32 @@ export class PayloadObjectDatasource<T extends Record<string, unknown>> implemen
       id,
     };
 
-    const post = await payload.create({
-      collection, // required
-      data: updated,
-    });
-
+    let exists;
+    try {
+      exists = await payload.findByID({
+        id,
+        collection
+      });
+    } catch(e) {
     // tslint:disable-next-line:no-console
-    console.log('[payload][update] Posted ', post);
+      console.error(`[payload][update] Exception while checking for existence of ${idProperty}: ${id} in ${collection}: `, e);
+    }
+
+    if (!exists) {
+      await payload.create({
+        collection, // required
+        data: updated,
+      });
+    } else {
+      await payload.update({
+        collection,
+        data: updated,
+        id,
+      });
+    }
+
+    const verb = exists ? 'update' : 'create';
+    // tslint:disable-next-line:no-console
+    console.log(`[payload][update] Successfully ${verb}d ${idProperty}: ${id} in ${collection}`);
   }
 }
