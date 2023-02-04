@@ -1,4 +1,4 @@
-export type DataSourceType = ArrayDataSource | ObjectDataSource;
+export type DataSourceType<T extends string | symbol | number> = ArrayDataSource<T> | ObjectDataSource<T>;
 export type PayloadDataSourceConfig = {
   collection: string;
   idProperty?: string;
@@ -6,15 +6,15 @@ export type PayloadDataSourceConfig = {
 
 export type DocWithId<T> = T & { id: string; }
 
-export interface ArrayDataSource<T extends Record<string, unknown> = Record<string, unknown>> extends BaseDataSource<T> {
+export interface ArrayDataSource<T extends string | symbol | number> extends BaseDataSource<T> {
   fetchAll(config: PayloadDataSourceConfig): Promise<T[]>;
 }
 
-export interface ObjectDataSource<T extends Record<string, unknown> = Record<string, unknown>> extends BaseDataSource<T> {
+export interface ObjectDataSource<T extends string | symbol | number> extends BaseDataSource<T> {
   fetchAll(config: PayloadDataSourceConfig): Promise<Record<string, T>>;
 }
 
-interface BaseDataSource<T extends Record<string, unknown> = Record<string, unknown>> {
+interface BaseDataSource<T extends string | symbol | number> {
   fetch(config: PayloadDataSourceConfig, id: string): Promise<T>;
   hasData(config: PayloadDataSourceConfig): Promise<boolean>;
   update?(config: PayloadDataSourceConfig, id: string, data: T): Promise<void>;

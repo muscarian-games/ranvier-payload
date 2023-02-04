@@ -7,7 +7,7 @@ import { DocWithId, ObjectDataSource, PayloadDataSourceConfig } from "./types/da
  * should return an Object, with each key representing
  * their respective entity by id.
  */
- export class PayloadObjectDatasource<T extends Record<string, unknown>> implements ObjectDataSource<T> {
+ export class PayloadObjectDatasource<T extends string | symbol | number> implements ObjectDataSource<T> {
   config: PayloadDataSourceConfig;
   rootPath: string;
 
@@ -29,7 +29,7 @@ import { DocWithId, ObjectDataSource, PayloadDataSourceConfig } from "./types/da
   async hasData(config: PayloadDataSourceConfig) {
     const payload = await this.getPayload();
     const { collection } = config;
-    const results = await payload.find<DocWithId<T>>({
+    const results = await payload.find({
       collection,
       limit: 1, // Return one doc at most since we only need to have one to have data!
     });
@@ -55,7 +55,7 @@ import { DocWithId, ObjectDataSource, PayloadDataSourceConfig } from "./types/da
 
     // tslint:disable-next-line:no-console
     console.log('[payload][fetch] Searching for ', idProperty, id, collection);
-    const result = await payload.find<DocWithId<T>>({
+    const result = await payload.find({
       collection,
       where: query
     });
@@ -73,7 +73,7 @@ import { DocWithId, ObjectDataSource, PayloadDataSourceConfig } from "./types/da
   async fetchAll(config: PayloadDataSourceConfig) {
     const payload = await this.getPayload();
     const { collection } = config;
-    const results = await payload.find<DocWithId<T>>({
+    const results = await payload.find({
       collection,
       pagination: false, // Return all docs
     });

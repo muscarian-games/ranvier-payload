@@ -2,7 +2,7 @@ import { Payload } from "payload";
 import { Options } from "payload/dist/collections/operations/local/create";
 import { ArrayDataSource, DocWithId, PayloadDataSourceConfig } from "./types/datasource";
 
-export class PayloadArrayDatasource<T extends Record<string, unknown>> implements ArrayDataSource<T> {
+export class PayloadArrayDatasource<T extends string | symbol | number> implements ArrayDataSource<T> {
   config: PayloadDataSourceConfig;
   rootPath: string;
 
@@ -24,7 +24,7 @@ export class PayloadArrayDatasource<T extends Record<string, unknown>> implement
   async hasData(config: PayloadDataSourceConfig) {
     const payload = await this.getPayload();
     const { collection } = config;
-    const results = await payload.find<DocWithId<T>>({
+    const results = await payload.find({
       collection,
       limit: 1, // Return one doc at most since we only need to have one to have data!
     });
@@ -50,7 +50,7 @@ export class PayloadArrayDatasource<T extends Record<string, unknown>> implement
 
     // tslint:disable-next-line:no-console
     console.log('[payload][fetch] Searching for ', idProperty, id, collection);
-    const result = await payload.find<DocWithId<T>>({
+    const result = await payload.find({
       collection,
       where: query
     });
@@ -68,7 +68,7 @@ export class PayloadArrayDatasource<T extends Record<string, unknown>> implement
   async fetchAll(config: PayloadDataSourceConfig) {
     const payload = await this.getPayload();
     const { collection } = config;
-    const results = await payload.find<DocWithId<T>>({
+    const results = await payload.find({
       collection,
       pagination: false, // Return all docs
     });
