@@ -1,13 +1,13 @@
 import { Payload } from "payload";
 import { Options } from "payload/dist/collections/operations/local/create";
-import { DocWithId, ObjectDataSource, PayloadDataSourceConfig } from "./types/datasource";
+import { ObjectDataSource, PayloadDataSourceConfig } from "./types/datasource";
 
 /**
  * fetchAll() for accounts, players, and help
  * should return an Object, with each key representing
  * their respective entity by id.
  */
- export class PayloadObjectDatasource<T extends string | symbol | number> implements ObjectDataSource<T> {
+export class PayloadObjectDatasource<T extends string | symbol | number> implements ObjectDataSource<T> {
   config: PayloadDataSourceConfig;
   rootPath: string;
 
@@ -28,6 +28,7 @@ import { DocWithId, ObjectDataSource, PayloadDataSourceConfig } from "./types/da
    */
   async hasData(config: PayloadDataSourceConfig) {
     const payload = await this.getPayload();
+
     const { collection } = config;
     const results = await payload.find({
       collection,
@@ -111,9 +112,12 @@ import { DocWithId, ObjectDataSource, PayloadDataSourceConfig } from "./types/da
       console.error(`[payload][update] Exception while checking for existence of ${idProperty}: ${id} in ${collection}: `, e);
     }
 
+    console.log('[payload][update] Payload methods are: ', payload.create, payload.update);
+    console.log('[payload][update] Payload itself is ', payload);
+
     if (!exists) {
       await payload.create({
-        collection, // required
+        collection,
         data: updated,
       });
     } else {
