@@ -1,6 +1,6 @@
 {
   "name": "ranvier-payload",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A datasource library for Ranvier and Payload CMS",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -37,7 +37,7 @@
   "homepage": "https://github.com/muscarian-games/ranvier-payload#readme",
   "dependencies": {
     "husky": "^8.0.2",
-    "payload": "^1.6.3"
+    "payload": "^1.7.5"
   },
   "devDependencies": {
     "@types/node": "^18.11.9",
