@@ -112,9 +112,6 @@ export class PayloadObjectDatasource<T extends string | symbol | number> impleme
       console.error(`[payload][update] Exception while checking for existence of ${idProperty}: ${id} in ${collection}: `, e);
     }
 
-    console.log('[payload][update] Payload methods are: ', payload.create, payload.update);
-    console.log('[payload][update] Payload itself is ', payload);
-
     if (!exists) {
       await payload.create({
         collection,
