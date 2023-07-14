@@ -135,11 +135,11 @@ export class PayloadObjectDatasource<T extends string | symbol | number> impleme
       .then(() => {
         const verb = exists ? 'update' : 'create';
         // tslint:disable-next-line:no-console
-        console.log(`[payload][update] Successfully ${verb}d ${idProperty}: ${id} in ${collection}`);
+        console.log(`[payload][update] Successfully ${verb}d '{ ${idProperty}: ${id} }' in ${collection}`);
       })
       .catch((e) => {
         // tslint:disable-next-line:no-console
-        console.error(`[payload][update] Exception while ${exists ? 'updating' : 'creating'} ${idProperty}: ${id} in ${collection}: `, e);
+        console.error(`[payload][update] Exception while ${exists ? 'updating' : 'creating'} '{ ${idProperty}: ${id} }' in ${collection}: `, e);
       });
   }
 }
