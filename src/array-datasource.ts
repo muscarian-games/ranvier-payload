@@ -87,7 +87,7 @@ export class PayloadArrayDatasource<T extends string | symbol | number> implemen
       id,
     };
 
-    let exists;
+    let exists: any;
     try {
       exists = await payload.findByID({
         id,
@@ -98,21 +98,29 @@ export class PayloadArrayDatasource<T extends string | symbol | number> implemen
       console.error(`[payload][update] Exception while checking for existence of ${idProperty}: ${id} in ${collection}: `, e);
     }
 
+    let taskPromise;
     if (!exists) {
-      await payload.create({
+      taskPromise = payload.create({
         collection, // required
         data: updated,
       });
     } else {
-      await payload.update({
+      taskPromise = payload.update({
         collection,
         data: updated,
         id,
       });
     }
 
-    const verb = exists ? 'update' : 'create';
-    // tslint:disable-next-line:no-console
-    console.log(`[payload][update] Successfully ${verb}d ${idProperty}: ${id} in ${collection}`);
+    taskPromise
+      .then(() => {
+        const verb = exists ? 'update' : 'create';
+        // tslint:disable-next-line:no-console
+        console.log(`[payload][update] Successfully ${verb}d ${idProperty}: ${id} in ${collection}`);
+      })
+      .catch((e) => {
+        // tslint:disable-next-line:no-console
+        console.error(`[payload][update] Exception while ${exists ? 'updating' : 'creating'} ${idProperty}: ${id} in ${collection}: `, e);
+      });
   }
 }

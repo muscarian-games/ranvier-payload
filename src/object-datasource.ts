@@ -101,7 +101,7 @@ export class PayloadObjectDatasource<T extends string | symbol | number> impleme
       id,
     };
 
-    let exists;
+    let exists: any = null;
     try {
       exists = await payload.findByID({
         id,
@@ -112,21 +112,34 @@ export class PayloadObjectDatasource<T extends string | symbol | number> impleme
       console.error(`[payload][update] Exception while checking for existence of ${idProperty}: ${id} in ${collection}: `, e);
     }
 
+    /**
+     * Doing this so that whatever is "await"ing this function
+     * can continue once the API call is made...
+     */
+    let taskPromise;
+
     if (!exists) {
-      await payload.create({
+      taskPromise = payload.create({
         collection,
         data: updated,
       });
     } else {
-      await payload.update({
+      taskPromise = payload.update({
         collection,
         data: updated,
         id,
       });
     }
 
-    const verb = exists ? 'update' : 'create';
-    // tslint:disable-next-line:no-console
-    console.log(`[payload][update] Successfully ${verb}d ${idProperty}: ${id} in ${collection}`);
+    taskPromise
+      .then(() => {
+        const verb = exists ? 'update' : 'create';
+        // tslint:disable-next-line:no-console
+        console.log(`[payload][update] Successfully ${verb}d ${idProperty}: ${id} in ${collection}`);
+      })
+      .catch((e) => {
+        // tslint:disable-next-line:no-console
+        console.error(`[payload][update] Exception while ${exists ? 'updating' : 'creating'} ${idProperty}: ${id} in ${collection}: `, e);
+      });
   }
 }
