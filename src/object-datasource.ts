@@ -1,5 +1,6 @@
 import { Payload } from "payload";
 import { Options } from "payload/dist/collections/operations/local/create";
+import { getPayloadProvider } from "./payload-provider";
 import { ObjectDataSource, PayloadDataSourceConfig } from "./types/datasource";
 
 // tslint:disable:no-console
@@ -22,7 +23,7 @@ export class PayloadObjectDatasource<T extends string | symbol | number> impleme
    * Get Payload for local API usage after initialization.
    */
   async getPayload() {
-    return import('payload') as unknown as Payload;
+    return getPayloadProvider() as unknown as Payload;
   }
 
   /**
