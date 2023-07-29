@@ -1,6 +1,6 @@
 {
   "name": "ranvier-payload",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A datasource library for Ranvier and Payload CMS",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
