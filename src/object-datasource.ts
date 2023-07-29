@@ -93,7 +93,6 @@ export class PayloadObjectDatasource<T extends string | symbol | number> impleme
   }
 
   async update(config: PayloadDataSourceConfig, id: string, data: Options<T>['data']) {
-    console.time(`[payload][update] Updating ${id} in ${config.collection}`);
     const payload = await this.getPayload();
     const { collection, idProperty = 'id' } = config;
     const updated = {
@@ -112,7 +111,6 @@ export class PayloadObjectDatasource<T extends string | symbol | number> impleme
       });
     } catch(e) {
     // tslint:disable-next-line:no-console
-      console.timeEnd(`[payload][update] Updating ${id} in ${config.collection}`);
       console.error(`[payload][update] Exception while checking for existence of ${idProperty}: ${id} in ${collection}: `, e);
     }
 
@@ -138,11 +136,9 @@ export class PayloadObjectDatasource<T extends string | symbol | number> impleme
     taskPromise
       .then(() => {
         const verb = exists ? 'update' : 'create';
-        console.timeEnd(`[payload][update] Updating ${id} in ${config.collection}`);
         console.log(`[payload][update] Successfully ${verb}d '{ ${idProperty}: ${id} }' in ${collection}`);
       })
       .catch((e) => {
-        console.time(`[payload][update] Updating ${id} in ${config.collection}`);
         console.error(`[payload][update] Exception while ${exists ? 'updating' : 'creating'} '{ ${idProperty}: ${id} }' in ${collection}: `, e);
       });
   }
